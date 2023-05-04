@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.2)
 project(SAM)
 
 IF(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE Debug)
+  SET(CMAKE_BUILD_TYPE Release)
 ENDIF()
 
 MESSAGE("Build type: " ${CMAKE_BUILD_TYPE})
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall   -O0 -ggdb")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall   -O0 -ggdb")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall   -O3 -ggdb")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall   -O3 -ggdb")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
@@ -33,15 +33,20 @@ set(ONNXRUNTIME_INCLUDE_DIRS ${ONNXRUNTIME_ROOT_PATH}/include/onnxruntime
                              ${ONNXRUNTIME_ROOT_PATH}/include/onnxruntime/core/session/)
 set(ONNXRUNTIME_LIB ${ONNXRUNTIME_ROOT_PATH}/build/Linux/Release/libonnxruntime.so)
 
+
+message(${PROJECT_SOURCE_DIR})
+
 include_directories(
-		      ${PROJECT_SOURCE_DIR}
-		      ${PROJECT_SOURCE_DIR}/include
+            ${PROJECT_SOURCE_DIR}/
 		      ${OpenCV_INCLUDE_DIRS}
-			  ${ONNXRUNTIME_INCLUDE_DIRS}
+			   ${ONNXRUNTIME_INCLUDE_DIRS}
 		      /usr/local/include/
+            /usr/include/eigen3
                    )
 			
 # Build application
-add_executable(sam main.cpp)
+add_executable(sam main.cpp image_encoder.cpp
+                            prompt_encoder.cpp
+                            model_weight.cpp)
 target_link_libraries(sam ${OpenCV_LIBS}
                           ${ONNXRUNTIME_LIB})
