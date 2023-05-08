@@ -41,7 +41,7 @@ public:
        Eigen::Tensor<double, 4> dense_embedding;
     }TwoEmbeddingResult;
     
-    Eigen::Tensor<double, 4> get_dense_pe();
+    Eigen::Tensor<double, 3> get_dense_pe();
     Eigen::Tensor<double, 3> _embed_points(Tensor<double, 3> in_points, Tensor<double, 2> in_labels);
     TwoEmbeddingResult forward(Tensor<double, 3> in_points, Tensor<double, 2> in_labels);
     
