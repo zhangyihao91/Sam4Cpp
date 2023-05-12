@@ -7,7 +7,7 @@
 
 PositionEmbeddingRandom::PositionEmbeddingRandom(int num_pos_feats, float scale) : num_pos_feats_(num_pos_feats), scale_(scale) {}
 
-Eigen::Tensor<double, 3> PositionEmbeddingRandom::forward(Eigen::Index h, Eigen::Index w) {
+Eigen::Tensor<double, 4> PositionEmbeddingRandom::forward(Eigen::Index h, Eigen::Index w) {
     Eigen::Tensor<double, 2> grid(h, w);
     grid.setConstant(1.0);
     Eigen::Tensor<double, 2> y_embed = grid.cumsum(Eigen::Index(0)) - 0.5;
@@ -22,7 +22,10 @@ Eigen::Tensor<double, 3> PositionEmbeddingRandom::forward(Eigen::Index h, Eigen:
     
     Eigen::Tensor<double, 3> result = _pe_encoding(coords);
     Eigen::Tensor<double, 3> image_pe = result.shuffle(Eigen::array<Eigen::Index, 3>({ 2, 0, 1 }));
-    return image_pe;
+    Eigen::Tensor<double, 4> image_pe_output;
+    Eigen::DSizes<Eigen::DenseIndex, 4> out_dim(1, 256 ,64, 64);
+    image_pe_output = image_pe.reshape(out_dim);
+    return image_pe_output;
 
 }
 
@@ -77,9 +80,10 @@ PromptEncoder::PromptEncoder(){
     this->pew = point_embeddings_weight;
  }
 
-Eigen::Tensor<double, 3> PromptEncoder::get_dense_pe()
+Eigen::Tensor<float, 4> PromptEncoder::get_dense_pe()
 {
-   return this->pe_layer.forward(this->image_embed_size, this->image_embed_size);
+   Eigen::Tensor<double, 4> double_pe = this->pe_layer.forward(this->image_embed_size, this->image_embed_size);
+   return double_pe.cast<float>();
 }
 
 Eigen::Tensor<double, 3> PromptEncoder::_embed_points(Tensor<double, 3> in_points, Tensor<double, 2> in_labels)

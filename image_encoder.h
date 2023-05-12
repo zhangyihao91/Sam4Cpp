@@ -1,5 +1,5 @@
-#ifndef _MASK_DECODER_H_
-#define _MASK_DECODER_H_
+#ifndef _IMAGE_ENCODER_H_
+#define _IMAGE_ENCODER_H_
 
 #include <opencv2/core.hpp>
 #include <opencv2/core/core.hpp>
@@ -21,12 +21,8 @@
 using namespace cv;   
 using namespace std;
 using namespace Ort;
+using namespace cv::dnn;
 
-typedef struct MaskDecoderOutput{
-    Eigen::Tensor<float, 4> low_res_masks;
-    Eigen::Tensor<float, 2> iou_prediction;
-}MaskDecoderOutput;
-
-void mask_decoder(Ort::Session& session, Ort::MemoryInfo& memory_info, Eigen::Tensor<float, 4>& image_features, Eigen::Tensor<float, 4>& image_pe, Eigen::Tensor<float, 3>& sparse_embedding, Eigen::Tensor<float, 4>& dense_embedding, MaskDecoderOutput md_result);
+Eigen::Tensor<float, 4> image_encoder(Ort::Session& session, Ort::MemoryInfo& memory_info,Eigen::Tensor<float, 4>& img);
 
 #endif

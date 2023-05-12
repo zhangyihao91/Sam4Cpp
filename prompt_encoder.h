@@ -13,7 +13,7 @@ class PositionEmbeddingRandom {
 public:
     PositionEmbeddingRandom(int num_pos_feats = 64, float scale = 1.0);
     Tensor<double, 3>  _pe_encoding(Eigen::Tensor<double, 3> coords);
-    Tensor<double, 3>  forward(Eigen::Index h, Eigen::Index w); 
+    Tensor<double, 4>  forward(Eigen::Index h, Eigen::Index w); 
     Tensor<double, 3>  forward_with_coords(Eigen::Tensor<double, 3> coords_input, Eigen::Index h, Eigen::Index w); 
 
 private:
@@ -37,11 +37,11 @@ public:
     vector<vector<double>> pew;
 
     typedef struct TwoEmbeddingResult{
-       Eigen::Tensor<double , 3> sparse_embedding;
+       Eigen::Tensor<double, 3> sparse_embedding;
        Eigen::Tensor<double, 4> dense_embedding;
     }TwoEmbeddingResult;
     
-    Eigen::Tensor<double, 3> get_dense_pe();
+    Eigen::Tensor<float, 4> get_dense_pe();
     Eigen::Tensor<double, 3> _embed_points(Tensor<double, 3> in_points, Tensor<double, 2> in_labels);
     TwoEmbeddingResult forward(Tensor<double, 3> in_points, Tensor<double, 2> in_labels);
     
